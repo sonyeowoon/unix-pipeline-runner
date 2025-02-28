@@ -6,7 +6,7 @@
 /*   By: sangseo <sangseo@student.42gyeongsan.kr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 00:27:05 by sangseo           #+#    #+#             */
-/*   Updated: 2025/01/31 07:50:56 by sangseo          ###   ########.fr       */
+/*   Updated: 2025/02/03 17:28:33 by sangseo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	sec_child_process(char **av, char **envp, int *fd)
 {
 	int	outfile;
 
-	outfile = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	outfile = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (outfile == -1)
 		ft_error(NULL);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
@@ -64,7 +64,7 @@ void	sec_child_process(char **av, char **envp, int *fd)
 
 int	main(int ac, char **av, char **envp)
 {
-	int	fd[2];
+	int		fd[2];
 	pid_t	pid1;
 	pid_t	pid2;
 
@@ -83,16 +83,8 @@ int	main(int ac, char **av, char **envp)
 		ft_error(NULL);
 	else if (pid1 != 0 && pid2 == 0)
 		sec_child_process(av, envp, fd);
-	// wait_child(pid1, pid2);
 	close_all(fd);
 	if (pid1 != 0 && pid2 != 0)
-	{
-		waitpid(pid1, NULL, 0);
-		waitpid(pid2, NULL, 0);
-	}
+		wait_child(pid1, pid2);
 	return (0);
-	// char buf[100];
-	// close(fd[1]);
-	// read(fd[0], buf, sizeof(buf));
-	// write(1, buf, ft_strlen(buf) + 1);
 }
